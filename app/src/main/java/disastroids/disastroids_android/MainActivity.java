@@ -1,83 +1,80 @@
 package disastroids.disastroids_android;
 
-import android.app.Activity;
-import android.content.Context;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
+/**
+ * Created by Daniel on 02/10/2016.
+ */
+
+
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-public class MainActivity extends Activity implements View.OnClickListener, SensorEventListener {
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 
-    Button button_setStartPosition;
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, Orientation.Listener  {
 
-    static final float NS2S = 1.0f / 1000000000.0f;
-    float[] last_values = null;
-    float[] velocity = null;
-    float[] position = null;
-    long last_timestamp = 0;
+    private float posX;
+    private float maxPosX = 1;
+    private float minPosX = -1;
+    private Button btnShoot;
 
-    private SensorManager mSensorManager;
-    private Sensor mAccelerometer;
+    private Orientation mOrientation;
+    //private AttitudeIndicator mAttitudeIndicator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.main);
 
-        button_setStartPosition = (Button)findViewById(R.id.button_setStartPosition);
-        button_setStartPosition.setOnClickListener(this);
-
-        // TODO: Tutorial from http://www.techrepublic.com/blog/software-engineer/a-quick-tutorial-on-coding-androids-accelerometer/
-        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
-    }
-
-        // TODO: Copied from http://stackoverflow.com/questions/11068671/read-x-y-z-coordinates-of-android-phone-using-accelerometer
-        public void onSensorChanged (SensorEvent event){
-            if (last_values != null) {
-                float dt = (event.timestamp - last_timestamp) * NS2S;
-
-                for (int index = 0; index < 3; ++index) {
-                    velocity[index] += (event.values[index] + last_values[index]) / 2 * dt;
-                    position[index] += velocity[index] * dt;
-                }
-            } else {
-                last_values = new float[3];
-                velocity = new float[3];
-                position = new float[3];
-                velocity[0] = velocity[1] = velocity[2] = 0f;
-                position[0] = position[1] = position[2] = 0f;
+        btnShoot = (Button)findViewById(R.id.btnShoot);
+        btnShoot.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v){
+                new SendCommand().execute("{\"type\":\"Fire\",\"x\":0,\"y\":0,\"z\":0}");
             }
-            System.arraycopy(event.values, 0, last_values, 0, 3);
-            last_timestamp = event.timestamp;
-            System.out.println("Position: " + position[0] + " || " + position[1] + " || " + position[2]);
-        }
+        });
 
-    @Override
-    public void onClick(View v) {
-        if(v == button_setStartPosition){
-            System.out.println("Button clicked");
-
-        }
+        mOrientation = new Orientation(this);
+        //mAttitudeIndicator = (AttitudeIndicator) findViewById(R.id.attitude_indicator);
     }
 
     @Override
-    public final void onAccuracyChanged(Sensor sensor, int accuracy) {
-        // Required method when implementing SensorListener
+    protected void onStart() {
+        super.onStart();
+        mOrientation.startListening(this);
     }
 
-    protected void onResume() {
-        super.onResume();
-        mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mOrientation.stopListening();
     }
-    protected void onPause() {
-        super.onPause();
-        mSensorManager.unregisterListener(this);
+
+    @Override
+    public void onOrientationChanged(float pitch, float roll) {
+        //mAttitudeIndicator.setAttitude(pitch, roll);
+        System.out.println("Pitch:" + pitch + " , Roll:" + roll);
+
+        //Position Code
+        posX = posX + roll/1000;
+        posX = posX < minPosX ? minPosX : posX;
+        posX = posX > maxPosX ? maxPosX : posX;
+
+        new SendCommand().execute("{\"type\":\"Move\",\"x\":" + roll / 1000 + ",\"y\":0,\"z\":0}");
+
+
+
     }
+
+    public void onClick(View v){
+
+    }
+
+    //private Runnable SendMessage = new Runnable() {
+    //("\"type\":\"Move\",\"x\":"+0+"\"y\":0,\"z\":0").getBytes();
+
+    //};
 }
