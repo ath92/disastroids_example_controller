@@ -5,11 +5,19 @@ package disastroids.disastroids_android.model;
  */
 public class Model {
 
-    private String IPAddress; // for setting which IP Address to sent the packages to
-    private String Port; // for setting which Port to sent the packages to
+    private String IPAddress = "127.0.0.1"; // for setting which IP Address to sent the packages to
+    private int Port = 2048; // for setting which Port to sent the packages to
+    private static Model model;
 
-    public Model(){
+    private Model(){
 
+    }
+
+    public static Model getInstance(){
+        if (model == null) {
+            model = new Model();
+        }
+        return model;
     }
 
     public void setIPAddress(String IPAddress){
@@ -20,11 +28,11 @@ public class Model {
         return IPAddress;
     }
 
-    public void setPort(String Port){
+    public void setPort(int Port){
         this.Port = Port;
     }
 
-    public String getPort(){
+    public int getPort(){
         return Port;
     }
 }

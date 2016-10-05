@@ -69,13 +69,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         posX = posX < minPosX ? minPosX : posX;
         posX = posX > maxPosX ? maxPosX : posX;
 
-        //TODO: Store the rotation in every OrientationChange, then send it every intervall instead of sending it everytime
+        // TODO: Store the rotation in every OrientationChange, then send it every intervall instead of sending it everytime
 
-        //TODO: Limit -90 (move right) to 90 (move left)
+        // TODO: Limit -90 (move right) to 90 (move left)
         // TODO: Unity should be dividing it (roll)
         new SendCommand().execute("{\"type\":\"Move\",\"x\":" + roll / -1000 + ",\"y\":0,\"z\":0}");
-
-
+        new SendCommand().execute("{\"type\":\"Rotate\",\"x\":0,\"y\":0,\"z\":" + roll + "}");
     }
 
     public void onClick(View v){
@@ -87,3 +86,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     //};
 }
+
+
+// GestureHandler which handles all the sensor input and

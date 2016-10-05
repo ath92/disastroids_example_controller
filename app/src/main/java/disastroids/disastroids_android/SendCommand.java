@@ -14,10 +14,16 @@ import disastroids.disastroids_android.model.Model;
  */
 public class SendCommand extends AsyncTask<String,Void,Void> {
 
-            protected Void doInBackground(String... msg){
+        private Model model = Model.getInstance();
+
+        protected Void doInBackground(String... msg){
+
                 try {
-                    String host = "192.168.43.143";
-                    int port = 2048; //Random Port
+                    String host;
+                    int port;
+
+                    if(model.getIPAddress() == null) { host = "127.0.0.1"; } else { host = model.getIPAddress(); }
+                    if(model.getPort() == 0) { port = 2048; } else { port = model.getPort(); }
 
                     byte[] message = msg[0].getBytes();
                     //byte[] message = ("\"type\":\"rotate\",\"roll\":"+roll).getBytes();

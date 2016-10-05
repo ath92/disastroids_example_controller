@@ -18,28 +18,25 @@ public class SettingsActivity extends Activity {
     Button btnSave;
     TextView txtInputIPAddress;
     TextView txtInputPort;
-    Model model;
+    private Model model = Model.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.settings);
 
-        //adding the model
-        model = ((DisastroidsApplication) this.getApplication()).getModel();
-
         txtInputIPAddress = (TextView)findViewById(R.id.txtInputIPAddress);
         txtInputPort = (TextView)findViewById(R.id.txtInputPort);
 
-        txtInputIPAddress.setText(model.getIPAddress());
-        txtInputPort.setText(model.getPort());
+        if(model.getIPAddress() == null) { txtInputIPAddress.setText("127.0.0.1"); } else { txtInputIPAddress.setText(model.getIPAddress()); }
+        if(model.getPort() == 0) { txtInputPort.setText("2048"); } else { txtInputPort.setText(String.valueOf(model.getPort())); }
 
         btnSave = (Button)findViewById(R.id.btnSave);
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 model.setIPAddress(txtInputIPAddress.getText().toString());
-                model.setPort(txtInputPort.getText().toString());
+                model.setPort(Integer.parseInt(txtInputPort.getText().toString()));
                 Toast toast = Toast.makeText(getApplicationContext(), "Saved! IP Address: " + model.getIPAddress() + " and Port: " + model.getPort(), Toast.LENGTH_SHORT);
                 toast.show();
                 startActivity(new Intent(SettingsActivity.this, MainActivity.class));

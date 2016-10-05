@@ -71,14 +71,15 @@
         android:layout_height="wrap_content"
         android:text="Fire!!!"
         android:id="@+id/btnShoot"
-        android:layout_above="@+id/btnSettings"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/btnSettings" />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Settings"
         android:id="@+id/btnSettings"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerVertical="true"
+        android:layout_alignStart="@+id/txtPlayerZPos" />
 </RelativeLayout>
