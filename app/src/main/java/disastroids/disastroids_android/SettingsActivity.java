@@ -13,6 +13,7 @@ import disastroids.disastroids_android.model.Model;
 /**
  * Created by Daniel on 05/10/2016.
  */
+
 public class SettingsActivity extends Activity {
 
     Button btnSave;

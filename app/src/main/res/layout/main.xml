@@ -8,64 +8,6 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="12dp"
-        android:text="Large Text"
-        android:id="@+id/txtXPos"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="59dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="12dp"
-        android:text="Large Text"
-        android:id="@+id/txtYPos"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="12dp"
-        android:text="Large Text"
-        android:id="@+id/txtZPos"
-        android:layout_alignTop="@+id/txtXPos"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="54dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="12dp"
-        android:text="Large Text"
-        android:id="@+id/txtPlayerXPos"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="56dp"
-        android:layout_marginTop="60dp"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="12dp"
-        android:text="Large Text"
-        android:id="@+id/txtPlayerYPos"
-        android:layout_alignTop="@+id/txtPlayerXPos"
-        android:layout_centerHorizontal="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="12dp"
-        android:text="Large Text"
-        android:id="@+id/txtPlayerZPos"
-        android:layout_alignTop="@+id/txtPlayerXPos"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="54dp" />
-
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -80,6 +22,6 @@
         android:layout_height="wrap_content"
         android:text="Settings"
         android:id="@+id/btnSettings"
-        android:layout_centerVertical="true"
-        android:layout_alignStart="@+id/txtPlayerZPos" />
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
 </RelativeLayout>

@@ -59,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mOrientation.stopListening();
     }
 
+    // TODO Remove onOrientationChanged and transfer it to Communication
     @Override
     public void onOrientationChanged(float pitch, float roll) {
         //mAttitudeIndicator.setAttitude(pitch, roll);
@@ -70,9 +71,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         posX = posX > maxPosX ? maxPosX : posX;
 
         // TODO: Store the rotation in every OrientationChange, then send it every intervall instead of sending it everytime
-
-        // TODO: Limit -90 (move right) to 90 (move left)
+        // TODO: Limit -90 (move right) to 90 (move left) - or maybe leave it, if, then do it in Unity
         // TODO: Unity should be dividing it (roll)
+        // TODO: CHANGE ORIENTATION WITH ALL AXES
         new SendCommand().execute("{\"type\":\"Move\",\"x\":" + roll / -1000 + ",\"y\":0,\"z\":0}");
         new SendCommand().execute("{\"type\":\"Rotate\",\"x\":0,\"y\":0,\"z\":" + roll + "}");
     }

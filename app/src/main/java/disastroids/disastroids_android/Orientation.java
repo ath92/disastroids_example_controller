@@ -13,7 +13,11 @@ import android.support.annotation.Nullable;
 import android.view.Surface;
 import android.view.WindowManager;
 
-public class Orientation implements SensorEventListener {
+import disastroids.disastroids_android.model.Model;
+
+public class Orientation implements InputMethod, SensorEventListener  {
+
+    private Model model = Model.getInstance();
 
     public interface Listener {
         void onOrientationChanged(float pitch, float roll);
@@ -117,7 +121,24 @@ public class Orientation implements SensorEventListener {
         float pitch = orientation[1] * -57;
         float roll = orientation[2] * -57;
 
-        mListener.onOrientationChanged(pitch, roll);
+        // DM: Update model
+        model.setPitch(pitch);
+        model.setRoll(roll);
+
+        //mListener.onOrientationChanged(pitch, roll); //TODO Exchange with model update
+    }
+
+    public String serialize() {
+        //TODO implement the serialization method
+        String strSerialized;
+        strSerialized = "{\"type\":\"Orientation\",\"x\":" +
+               model.getRoll() +
+                ",\"y\":" +
+                //model.getYaw() +
+                ",\"z\":" +
+                model.getPitch() + "}";
+
+        return strSerialized;
     }
 
     private void updatePosition() {
