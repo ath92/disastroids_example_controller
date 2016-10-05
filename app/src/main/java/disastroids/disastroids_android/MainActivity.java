@@ -4,6 +4,8 @@ package disastroids.disastroids_android;
  * Created by Daniel on 02/10/2016.
  */
 
+import android.content.Intent;
+import android.media.audiofx.BassBoost;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -37,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v){
-                new SendCommand().execute("{\"type\":\"Fire\",\"x\":0,\"y\":0,\"z\":0}");
+                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
             }
         });
 
@@ -67,8 +69,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         posX = posX < minPosX ? minPosX : posX;
         posX = posX > maxPosX ? maxPosX : posX;
 
-        new SendCommand().execute("{\"type\":\"Move\",\"x\":" + roll / 1000 + ",\"y\":0,\"z\":0}");
+        //TODO: Store the rotation in every OrientationChange, then send it every intervall instead of sending it everytime
 
+        //TODO: Limit -90 (move right) to 90 (move left)
+        // TODO: Unity should be dividing it (roll)
+        new SendCommand().execute("{\"type\":\"Move\",\"x\":" + roll / -1000 + ",\"y\":0,\"z\":0}");
 
 
     }

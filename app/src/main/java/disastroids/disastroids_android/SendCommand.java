@@ -1,10 +1,13 @@
 package disastroids.disastroids_android;
 
 import android.os.AsyncTask;
+import android.os.Bundle;
 
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+
+import disastroids.disastroids_android.model.Model;
 
 /**
  * This is the class responsible for sending UDP communication via JSON
@@ -13,7 +16,7 @@ public class SendCommand extends AsyncTask<String,Void,Void> {
 
             protected Void doInBackground(String... msg){
                 try {
-                    String host = "127.0.0.1";
+                    String host = "192.168.43.143";
                     int port = 2048; //Random Port
 
                     byte[] message = msg[0].getBytes();
