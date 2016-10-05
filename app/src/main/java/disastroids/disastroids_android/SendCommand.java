@@ -7,13 +7,13 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 
 /**
- * Created by Daniel on 02/10/2016.
+ * This is the class responsible for sending UDP communication via JSON
  */
 public class SendCommand extends AsyncTask<String,Void,Void> {
 
             protected Void doInBackground(String... msg){
                 try {
-                    String host = "192.168.43.208";
+                    String host = "127.0.0.1";
                     int port = 2048; //Random Port
 
                     byte[] message = msg[0].getBytes();

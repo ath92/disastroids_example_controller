@@ -4,15 +4,10 @@ package disastroids.disastroids_android;
  * Created by Daniel on 02/10/2016.
  */
 
-
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, Orientation.Listener  {
 
@@ -20,6 +15,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private float maxPosX = 1;
     private float minPosX = -1;
     private Button btnShoot;
+    private Button btnSettings;
 
     private Orientation mOrientation;
     //private AttitudeIndicator mAttitudeIndicator;
@@ -31,6 +27,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         btnShoot = (Button)findViewById(R.id.btnShoot);
         btnShoot.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new SendCommand().execute("{\"type\":\"Fire\",\"x\":0,\"y\":0,\"z\":0}");
+            }
+        });
+
+        btnSettings = (Button)findViewById(R.id.btnSettings);
+        btnSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v){
                 new SendCommand().execute("{\"type\":\"Fire\",\"x\":0,\"y\":0,\"z\":0}");

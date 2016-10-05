@@ -14,7 +14,7 @@ import android.widget.TextView;
 /**
  * TODO: Copied from http://www.techrepublic.com/blog/software-engineer/a-quick-tutorial-on-coding-androids-accelerometer/
  */
-public class TestSensor extends Activity implements SensorEventListener {
+public class Remove_TestMove extends Activity implements SensorEventListener {
 
         private float mLastX, mLastY, mLastZ;
         private boolean mInitialized;

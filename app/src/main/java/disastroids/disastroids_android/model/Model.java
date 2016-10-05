@@ -5,7 +5,7 @@ package disastroids.disastroids_android.model;
  */
 public class Model {
 
-
+    private String IPAddress; // for setting which IP Address to sent the packages to
 
     public Model(){
 
