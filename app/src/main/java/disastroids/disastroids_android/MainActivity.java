@@ -4,23 +4,28 @@ package disastroids.disastroids_android;
  * Created by Daniel on 02/10/2016.
  */
 
+import android.app.Application;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.audiofx.BassBoost;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, Orientation.Listener  {
-
-    private float posX;
-    private float maxPosX = 1;
-    private float minPosX = -1;
+public class MainActivity extends AppCompatActivity implements View.OnClickListener  {
     private Button btnShoot;
     private Button btnSettings;
 
-    private Orientation mOrientation;
     //private AttitudeIndicator mAttitudeIndicator;
+
+    private NetworkManager networkManager;
+    private InputManager inputManager = InputManager.getInstance();
+
+    private Orientation orientation;
+
+    private boolean inputMethodsSetup = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +36,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnShoot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new SendCommand().execute("{\"type\":\"Fire\",\"x\":0,\"y\":0,\"z\":0}");
+                //new SendCommand().execute("{\"type\":\"Fire\",\"x\":0,\"y\":0,\"z\":0}");
             }
         });
 
@@ -43,49 +48,44 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
-        mOrientation = new Orientation(this);
         //mAttitudeIndicator = (AttitudeIndicator) findViewById(R.id.attitude_indicator);
+
+        networkManager.getInstance().start();;
+        setupInputMethods();
+    }
+
+    private void setupInputMethods(){
+        //This function should only be run once. We use a function in our custom application class to do this.
+        App app = (App)getApplication();
+        if(app.isFirstRun()) {
+            orientation = new Orientation(this);
+            inputManager.addInputMethod(orientation);
+            orientation.startListening();
+        }
+
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        mOrientation.startListening(this);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        mOrientation.stopListening();
+        ///orientation.stopListening();
     }
 
-    // TODO Remove onOrientationChanged and transfer it to Communication
+
     @Override
-    public void onOrientationChanged(float pitch, float roll) {
-        //mAttitudeIndicator.setAttitude(pitch, roll);
-        System.out.println("Pitch:" + pitch + " , Roll:" + roll);
-
-        //Position Code
-        posX = posX + roll/1000;
-        posX = posX < minPosX ? minPosX : posX;
-        posX = posX > maxPosX ? maxPosX : posX;
-
-        // TODO: Store the rotation in every OrientationChange, then send it every intervall instead of sending it everytime
-        // TODO: Limit -90 (move right) to 90 (move left) - or maybe leave it, if, then do it in Unity
-        // TODO: Unity should be dividing it (roll)
-        // TODO: CHANGE ORIENTATION WITH ALL AXES
-        new SendCommand().execute("{\"type\":\"Move\",\"x\":" + roll / -1000 + ",\"y\":0,\"z\":0}");
-        new SendCommand().execute("{\"type\":\"Rotate\",\"x\":0,\"y\":0,\"z\":" + roll + "}");
+    protected void onDestroy() {
+        super.onDestroy();
+        inputManager.removeInputMethod(orientation);
     }
 
     public void onClick(View v){
 
     }
-
-    //private Runnable SendMessage = new Runnable() {
-    //("\"type\":\"Move\",\"x\":"+0+"\"y\":0,\"z\":0").getBytes();
-
-    //};
 }
 
 

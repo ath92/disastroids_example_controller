@@ -13,15 +13,9 @@ import android.support.annotation.Nullable;
 import android.view.Surface;
 import android.view.WindowManager;
 
-import disastroids.disastroids_android.model.Model;
-
 public class Orientation implements InputMethod, SensorEventListener  {
 
-    private Model model = Model.getInstance();
-
-    public interface Listener {
-        void onOrientationChanged(float pitch, float roll);
-    }
+    private InputManager inputManager = InputManager.getInstance();
 
     private static final int SENSOR_DELAY_MICROS = 50 * 1000; // 50ms
 
@@ -32,7 +26,8 @@ public class Orientation implements InputMethod, SensorEventListener  {
     private final Sensor mRotationSensor;
 
     private int mLastAccuracy;
-    private Listener mListener;
+
+    private float pitch, roll;
 
     public Orientation(Activity activity) {
         mWindowManager = activity.getWindow().getWindowManager();
@@ -42,11 +37,7 @@ public class Orientation implements InputMethod, SensorEventListener  {
         mRotationSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
     }
 
-    public void startListening(Listener listener) {
-        if (mListener == listener) {
-            return;
-        }
-        mListener = listener;
+    public void startListening() {
         if (mRotationSensor == null) {
             //LogUtil.w("Rotation vector sensor not available; will not provide orientation data.");
             return;
@@ -56,7 +47,6 @@ public class Orientation implements InputMethod, SensorEventListener  {
 
     public void stopListening() {
         mSensorManager.unregisterListener(this);
-        mListener = null;
     }
 
     @Override
@@ -68,9 +58,6 @@ public class Orientation implements InputMethod, SensorEventListener  {
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        if (mListener == null) {
-            return;
-        }
         if (mLastAccuracy == SensorManager.SENSOR_STATUS_UNRELIABLE) {
             return;
         }
@@ -118,30 +105,15 @@ public class Orientation implements InputMethod, SensorEventListener  {
         SensorManager.getOrientation(adjustedRotationMatrix, orientation);
 
         // Convert radians to degrees
-        float pitch = orientation[1] * -57;
-        float roll = orientation[2] * -57;
-
-        // DM: Update model
-        model.setPitch(pitch);
-        model.setRoll(roll);
-
-        //mListener.onOrientationChanged(pitch, roll); //TODO Exchange with model update
+        pitch = orientation[1] * -57;
+        roll = orientation[2] * -57;
     }
 
     public String serialize() {
-        //TODO implement the serialization method
         String strSerialized;
-        strSerialized = "{\"type\":\"Orientation\",\"x\":" +
-               model.getRoll() +
-                ",\"y\":" +
-                //model.getYaw() +
-                ",\"z\":" +
-                model.getPitch() + "}";
+        strSerialized = "{\"type\":\"Orientation\",\"x\":"+pitch+",\"y\":"+roll+",\"z\":0}";
 
         return strSerialized;
     }
 
-    private void updatePosition() {
-
-    }
 }
