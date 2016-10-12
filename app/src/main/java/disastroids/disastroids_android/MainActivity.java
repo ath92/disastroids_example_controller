@@ -25,20 +25,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private Orientation orientation;
 
-    private boolean inputMethodsSetup = false;
+    private ButtonManager buttonManager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-
-        btnShoot = (Button)findViewById(R.id.btnShoot);
-        btnShoot.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //new SendCommand().execute("{\"type\":\"Fire\",\"x\":0,\"y\":0,\"z\":0}");
-            }
-        });
 
         btnSettings = (Button)findViewById(R.id.btnSettings);
         btnSettings.setOnClickListener(new View.OnClickListener() {
@@ -52,12 +45,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         networkManager.getInstance().start();;
         setupInputMethods();
+        buttonManager = new ButtonManager();
+        inputManager.addInputMethod(buttonManager);
+        btnShoot = (Button)findViewById(R.id.btnShoot);
+        btnShoot.setOnClickListener(buttonManager);
     }
 
     private void setupInputMethods(){
         //This function should only be run once. We use a function in our custom application class to do this.
         App app = (App)getApplication();
         if(app.isFirstRun()) {
+            System.out.println("kjansdjknasd");
             orientation = new Orientation(this);
             inputManager.addInputMethod(orientation);
             orientation.startListening();

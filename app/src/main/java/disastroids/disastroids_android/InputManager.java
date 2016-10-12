@@ -41,13 +41,15 @@ public class InputManager {
         inputMethods.remove(inputMethod);
     }
 
-    public String serializeAll() {
+    public ArrayList<String> serializeAll() {
         String total = "";
+        ArrayList<String> allStrings = new ArrayList<String>();
         //System.out.println(String.valueOf(inputMethods.size()));
         for(InputMethod method: inputMethods){
-            total += method.serialize();
+            String serialized = method.serialize();
+            if(serialized != null) allStrings.add(serialized);
         }
-
-        return total;
+        System.out.println(allStrings.size());
+        return allStrings;
     }
 }

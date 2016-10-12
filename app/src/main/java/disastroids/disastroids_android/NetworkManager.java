@@ -49,13 +49,15 @@ public class NetworkManager {
                 public void run() {
                     try {
                         if(address != null) {
-                            byte[] message = inputManager.serializeAll().getBytes();
-                            // Initialize a datagram packet with data and address
-                            DatagramPacket packet = new DatagramPacket(message, message.length,
-                                    address, port);
-                            // Create a datagram socket, send the packet through it, close it.
-                            dsocket.send(packet);
-                            System.out.println("Sent: " + inputManager.serializeAll());
+                            for(String messageString: inputManager.serializeAll()){
+                                byte[] message = messageString.getBytes();
+                                // Initialize a datagram packet with data and address
+                                DatagramPacket packet = new DatagramPacket(message, message.length,
+                                        address, port);
+                                // Create a datagram socket, send the packet through it, close it.
+                                dsocket.send(packet);
+                                System.out.println("Sent: " + messageString);
+                            }
                         }
                     } catch (Exception e) {
                         System.err.println(e);
