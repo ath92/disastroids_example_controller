@@ -22,7 +22,7 @@ public class ButtonManager implements InputMethod, View.OnClickListener {
     public String serialize(){
         if(clicked){
             clicked =false;
-            return "{\"Type\": \"Fire\", \"x\": 0, \"y\": 0, \"z\": 0}";
+            return "{\"type\": \"Fire\", \"x\": 0, \"y\": 0, \"z\": 0}";
         } else {
             return null;
         }
