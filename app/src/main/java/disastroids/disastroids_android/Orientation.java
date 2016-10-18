@@ -15,8 +15,6 @@ import android.view.WindowManager;
 
 public class Orientation implements InputMethod, SensorEventListener  {
 
-    private InputManager inputManager = InputManager.getInstance();
-
     private static final int SENSOR_DELAY_MICROS = 50 * 1000; // 50ms
 
     private final WindowManager mWindowManager;

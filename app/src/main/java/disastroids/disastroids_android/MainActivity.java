@@ -12,10 +12,13 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.media.audiofx.BassBoost;
 import android.preference.PreferenceManager;
+import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -25,61 +28,64 @@ import android.widget.ImageButton;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener  {
     private Button btnShoot;
     private ImageButton btnSettings;
-    private NetworkManager networkManager;
-    private InputManager inputManager = InputManager.getInstance();
+    private NetworkManager networkManager = NetworkManager.getInstance();
+    private InputManager inputManager;
 
     private Orientation orientation;
 
     private ButtonManager buttonManager;
 
+    private GestureDetectorCompat gestureDetector;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        //Remove title and notification bar
-        //this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        //this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         this.setContentView(R.layout.main);
 
-        //btnSettings = (ImageButton)findViewById(R.id.btnSettings);
-        //btnSettings.setOnClickListener(new View.OnClickListener() {
-        //    @Override
-        //    public void onClick(View v) {
-        //        startActivity(new Intent(MainActivity.this, SettingsActivity.class));
-        //    }
-        //});
 
-        networkManager.getInstance().start();;
-        setupInputMethods();
+        //Create new inputmanager for this activity
+        inputManager = new InputManager();
+
+        //Handle the fire button
         buttonManager = new ButtonManager();
         inputManager.addInputMethod(buttonManager);
         btnShoot = (Button)findViewById(R.id.btnShoot);
         btnShoot.setOnClickListener(buttonManager);
 
-        Window window = this.getWindow();
-
-// clear FLAG_TRANSLUCENT_STATUS flag:
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-
-// add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-
-// finally change the color
-        window.setStatusBarColor(this.getResources().getColor(R.color.colorBlack));
-
-        }
-
-        @Override
-        public boolean onOptionsItemSelected(MenuItem item) {
-            switch (item.getItemId()) {
-                case R.id.action_settings:
-                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+        //Handle the swipe button
+        SwipeManager swipeManager = new SwipeManager();
+        gestureDetector = new GestureDetectorCompat(this, swipeManager);
+        Button btnTouch = (Button)findViewById(R.id.btnTouch);
+        btnTouch.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                //System.out.println("hey");
+                gestureDetector.onTouchEvent(motionEvent);
                 return true;
+            }
+        });
+        inputManager.addInputMethod(swipeManager);
 
-            default:
-                return super.onOptionsItemSelected(item);
+        //handle orientation changes
+        orientation = new Orientation(this);
+        inputManager.addInputMethod(orientation);
+        orientation.startListening();
 
+
+        //Have the networkmanager listen to the current inputmanager and start it.
+        networkManager.setInputManager(inputManager);
+        networkManager.start();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+            startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+            return true;
+        default:
+            return super.onOptionsItemSelected(item);
         }
     }
 
@@ -87,19 +93,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
         return true;
-    }
-
-
-    private void setupInputMethods(){
-        //This function should only be run once. We use a function in our custom application class to do this.
-        App app = (App)getApplication();
-        if(app.isFirstRun()) {
-            System.out.println("kjansdjknasd");
-            orientation = new Orientation(this);
-            inputManager.addInputMethod(orientation);
-            orientation.startListening();
-        }
-
     }
 
     @Override
@@ -110,14 +103,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onStop() {
         super.onStop();
-        ///orientation.stopListening();
     }
 
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        inputManager.removeInputMethod(orientation);
     }
 
     public void onClick(View v){

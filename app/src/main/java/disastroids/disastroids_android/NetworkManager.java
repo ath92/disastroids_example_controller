@@ -1,6 +1,7 @@
 package disastroids.disastroids_android;
 
 import android.os.AsyncTask;
+import android.renderscript.ScriptGroup;
 import android.util.Log;
 
 import java.net.DatagramPacket;
@@ -20,7 +21,7 @@ public class NetworkManager {
 
     public static NetworkManager networkManager;
 
-    private InputManager inputManager = InputManager.getInstance();
+    private InputManager inputManager;
 
     private Timer timer;
     private TimerTask timerTask;
@@ -36,6 +37,10 @@ public class NetworkManager {
             networkManager = new NetworkManager();
         }
         return networkManager;
+    }
+
+    public void setInputManager(InputManager inputManager){
+        this.inputManager = inputManager;
     }
 
     private NetworkManager(){

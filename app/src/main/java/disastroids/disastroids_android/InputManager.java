@@ -8,20 +8,9 @@ import java.util.List;
  */
 
 public class InputManager {
-
-
-    private static InputManager inputManager;
-
     private ArrayList<InputMethod> inputMethods = new ArrayList<InputMethod>();
 
-    private InputManager(){
-    }
-
-    public static InputManager getInstance(){
-        if (inputManager == null) {
-            inputManager = new InputManager();
-        }
-        return inputManager;
+    public InputManager(){
     }
 
     public void addInputMethod(InputMethod inputMethod){
