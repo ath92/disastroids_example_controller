@@ -4,36 +4,26 @@ package disastroids.disastroids_android;
  * Created by Daniel on 02/10/2016.
  */
 
-import android.app.ActionBar;
-import android.app.Application;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.media.audiofx.BassBoost;
-import android.preference.PreferenceManager;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener  {
+public class MainActivity extends AppCompatActivity {
     private Button btnShoot;
     private ImageButton btnSettings;
     private NetworkManager networkManager = NetworkManager.getInstance();
     private InputManager inputManager;
 
-    private Orientation orientation;
+    private OrientationInput orientation;
 
-    private ButtonManager buttonManager;
+    private ButtonInput buttonInput;
 
     private GestureDetectorCompat gestureDetector;
 
@@ -48,14 +38,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         inputManager = new InputManager();
 
         //Handle the fire button
-        buttonManager = new ButtonManager();
-        inputManager.addInputMethod(buttonManager);
+        buttonInput = new ButtonInput();
+        inputManager.addInputMethod(buttonInput);
         btnShoot = (Button)findViewById(R.id.btnShoot);
-        btnShoot.setOnClickListener(buttonManager);
+        btnShoot.setOnClickListener(buttonInput);
 
         //Handle the swipe button
-        SwipeManager swipeManager = new SwipeManager();
-        gestureDetector = new GestureDetectorCompat(this, swipeManager);
+        SwipeInput swipeInput = new SwipeInput();
+        gestureDetector = new GestureDetectorCompat(this, swipeInput);
         Button btnTouch = (Button)findViewById(R.id.btnTouch);
         btnTouch.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -65,10 +55,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 return true;
             }
         });
-        inputManager.addInputMethod(swipeManager);
+        inputManager.addInputMethod(swipeInput);
 
         //handle orientation changes
-        orientation = new Orientation(this);
+        orientation = new OrientationInput(this);
         inputManager.addInputMethod(orientation);
         orientation.startListening();
 
@@ -109,10 +99,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onDestroy() {
         super.onDestroy();
-    }
-
-    public void onClick(View v){
-
     }
 }
 
