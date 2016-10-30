@@ -10,7 +10,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 /**
- * Created by Daniel on 05/10/2016.
+ * The settingsactivity allows the user to set up the connection to the server. Its usability is limited,
+ * but it works well enough for a demo application. This is a fairly simple activity, that just has some text fields
+ * that can update some variables within the networkmanager.
  */
 
 public class SettingsActivity extends Activity {
